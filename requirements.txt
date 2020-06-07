@@ -1,0 +1,6 @@
+h5py==2.10.0
+matplotlib==3.0.3
+scikit-learn==0.22.2.post1
+torch==1.4.0
+torchvision==0.5.0
+pandas==0.24.2
