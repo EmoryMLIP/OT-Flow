@@ -1,7 +1,5 @@
-# pyMFGnet
-Pytorch implementation of the Mean Field Game neural network 
-
-Current version focuses on its use for Continuous Normalizing Flows
+# OT-Flow
+Pytorch implementation of our optimal transport regularized continuous normalizing flows.
 
 ## Associated Publication
 
@@ -99,7 +97,9 @@ Run a pre-trained MNIST
 python interpMnist.py
 ```
 
+## Acknowledgements
 
+This material is in part based upon work supported by the National Science Foundation under Grant Number 1751636. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.
 
 
 
