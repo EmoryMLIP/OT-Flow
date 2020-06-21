@@ -7,7 +7,7 @@ except:
 # matplotlib.use('Agg') # assume no tkinter
 import matplotlib.pyplot as plt
 plt.rcParams['image.cmap'] = 'inferno'
-from src.MeanFieldGame import *
+from src.OTFlowProblem import *
 import numpy as np
 import os
 import h5py

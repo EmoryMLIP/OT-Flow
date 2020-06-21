@@ -2,7 +2,7 @@
 
 from src.Phi import Phi
 from src.PhiHC import PhiHC
-from src.MeanFieldGame import *
+from src.OTFlowProblem import *
 import torch
 import time
 

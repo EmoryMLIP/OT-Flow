@@ -49,24 +49,24 @@ python src/plotTraceComparison.py
 
 Train a toy example
 ```
-python trainToyCnf.py
+python trainToyOTflow.py
 ```
 
 Plot results of a pre-trained example
 ```
-python evaluateToyCnf.py
+python evaluateToyOTflow.py
 ```
 
 
 ## Large CNFs
 
 ```
-python trainLargeCnf.py
+python trainLargeOTflow.py
 ```
 
 Evaluate a pre-trained model
 ```
-python evaluateLargeCnf.py
+python evaluateLargeOTflow.py
 ```
 
 
@@ -89,7 +89,7 @@ Train and Evaluate using our hyperparameters ([see detailedSetup.md](detailedSet
 
 Train an MNIST model
 ```
-python trainMnistCnf.py
+python trainMnistOTflow.py
 ```
 
 Run a pre-trained MNIST

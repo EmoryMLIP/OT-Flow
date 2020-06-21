@@ -2,7 +2,7 @@
 # compare the exact trace in Phi with the hutchinsons estimator using atomatic differentiation
 
 import math
-from src.MeanFieldGame import *
+from src.OTFlowProblem import *
 
 gpu = 0
 if not torch.cuda.is_available():

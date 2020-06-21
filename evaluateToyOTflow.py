@@ -1,4 +1,4 @@
-# evaluateToyCnf.py
+# evaluateToyOTflow.py
 # plotting toy CNF results
 import matplotlib
 try:
@@ -17,7 +17,7 @@ import numpy as np
 import math
 import lib.toy_data as toy_data
 import lib.utils as utils
-from src.MeanFieldGame import *
+from src.OTFlowProblem import *
 from src.mmd import *
 from src.PhiHC import *
 
@@ -44,7 +44,7 @@ device = torch.device('cuda:' + str(args.gpu) if torch.cuda.is_available() else 
 
 # loss function
 def compute_loss(net, x, nt):
-    Jc , cs = MeanFieldGame(x, net, [0,1], nt=nt, stepper="rk4", alph=net.alph)
+    Jc , cs = OTFlowProblem(x, net, [0,1], nt=nt, stepper="rk4", alph=net.alph)
     return Jc, cs
 
 if __name__ == '__main__':
@@ -79,7 +79,7 @@ if __name__ == '__main__':
         modelGen    = integrate(y[:, 0:d]        , net, [1.0, 0.0], args.nt, stepper="rk4", alph=net.alph)
 
         print("          {:9s}  {:9s}  {:11s}  {:9s}".format( "loss", "L (L_2)", "C (loss)", "R (HJB)"))
-        print("[TEST]:   {:9.3e}  {:9.3e}  {:11.5e}  {:9.3e}".format(test_loss, test_cs[0], test_cs[2], test_cs[3]))
+        print("[TEST]:   {:9.3e}  {:9.3e}  {:11.5e}  {:9.3e}".format(test_loss, test_cs[0], test_cs[1], test_cs[2]))
 
         print("Using ", utils.count_parameters(net), " parameters")
         invErr = (torch.norm(p_samples-modelFinvfx[:,:d]) / p_samples.size(0)).item()

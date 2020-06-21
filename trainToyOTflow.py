@@ -1,4 +1,4 @@
-# trainToyCnf.py
+# trainToyOTflow.py
 # training driver for the two-dimensional toy problems
 import argparse
 import os
@@ -11,7 +11,7 @@ import lib.toy_data as toy_data
 import lib.utils as utils
 from lib.utils import count_parameters
 from src.plotter import plot4
-from src.MeanFieldGame import *
+from src.OTFlowProblem import *
 import config
 
 cf = config.getconfig()
@@ -33,7 +33,7 @@ parser.add_argument(
 
 parser.add_argument("--nt"    , type=int, default=8, help="number of time steps")
 parser.add_argument("--nt_val", type=int, default=8, help="number of time steps for validation")
-parser.add_argument('--alph'  , type=str, default='1.0,0.0,100.0,5.0,0.0')
+parser.add_argument('--alph'  , type=str, default='1.0,100.0,5.0')
 parser.add_argument('--m'     , type=int, default=32)
 parser.add_argument('--nTh'   , type=int, default=2)
 
@@ -78,7 +78,7 @@ device = torch.device('cuda:' + str(args.gpu) if torch.cuda.is_available() else 
 
 
 def compute_loss(net, x, nt):
-    Jc , cs = MeanFieldGame(x, net, [0,1], nt=nt, stepper="rk4", alph=net.alph)
+    Jc , cs = OTFlowProblem(x, net, [0,1], nt=nt, stepper="rk4", alph=net.alph)
     return Jc, cs
 
 
@@ -144,7 +144,7 @@ if __name__ == '__main__':
 
         log_message = (
             '{:05d}  {:6.3f}   {:9.3e}  {:9.3e}  {:9.3e}  {:9.3e}  '.format(
-                itr, time_meter.val , loss, costs[0], costs[2], costs[3]
+                itr, time_meter.val , loss, costs[0], costs[1], costs[2]
             )
         )
 
@@ -156,7 +156,7 @@ if __name__ == '__main__':
 
                 # add to print message
                 log_message += '    {:9.3e}  {:9.3e}  {:9.3e}  {:9.3e} '.format(
-                    test_loss, test_costs[0], test_costs[2], test_costs[3]
+                    test_loss, test_costs[0], test_costs[1], test_costs[2]
                 )
 
                 # save best set of parameters
@@ -168,7 +168,7 @@ if __name__ == '__main__':
                     torch.save({
                         'args': args,
                         'state_dict': best_params,
-                    }, os.path.join(args.save, start_time + '_{:}_alph{:}_{:}_m{:}_checkpt.pth'.format(args.data,int(alph[2]),int(alph[3]),m)))
+                    }, os.path.join(args.save, start_time + '_{:}_alph{:}_{:}_m{:}_checkpt.pth'.format(args.data,int(alph[1]),int(alph[2]),m)))
                     net.train()
 
         logger.info(log_message) # print iteration
@@ -186,7 +186,7 @@ if __name__ == '__main__':
 
                 sPath = os.path.join(args.save, 'figs', start_time + '_{:04d}.png'.format(itr))
                 plot4(net, p_samples, y, nt_val, sPath, doPaths=True, sTitle='{:s}  -  loss {:.2f}  ,  C {:.2f}  ,  alph {:.1f} {:.1f}  '
-                            ' nt {:d}   m {:d}  nTh {:d}  '.format(args.data, best_loss, best_costs[2], alph[2], alph[3], nt, m, nTh))
+                            ' nt {:d}   m {:d}  nTh {:d}  '.format(args.data, best_loss, best_costs[1], alph[1], alph[2], nt, m, nTh))
 
                 net.load_state_dict(curr_state)
                 net.train()
@@ -207,7 +207,7 @@ if __name__ == '__main__':
         end = time.time()
 
     logger.info("Training Time: {:} seconds".format(time_meter.sum))
-    logger.info('Training has finished.  ' + start_time + '_{:}_alph{:}_{:}_m{:}_checkpt.pth'.format(args.data,int(alph[2]),int(alph[3]),m))
+    logger.info('Training has finished.  ' + start_time + '_{:}_alph{:}_{:}_m{:}_checkpt.pth'.format(args.data,int(alph[1]),int(alph[2]),m))
 
 
 

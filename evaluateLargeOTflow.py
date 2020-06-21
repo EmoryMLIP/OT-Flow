@@ -1,4 +1,4 @@
-# evaluateLargeCnf.py
+# evaluateLargeOTflow.py
 # run model on testing set, calculate MMD, and plot
 import argparse
 import os
@@ -7,7 +7,7 @@ import numpy as np
 import lib.utils as utils
 from lib.utils import count_parameters
 from src.plotter import *
-from src.MeanFieldGame import *
+from src.OTFlowProblem import *
 import h5py
 import datasets
 from src.mmd import mmd
@@ -73,7 +73,7 @@ def load_data(name):
         raise ValueError('Unknown dataset')
 
 def compute_loss(net, x, nt):
-    Jc , cs = MeanFieldGame(x, net, [0,1], nt=nt, stepper="rk4", alph=net.alph)
+    Jc , cs = OTFlowProblem(x, net, [0,1], nt=nt, stepper="rk4", alph=net.alph)
     return Jc, cs
 
 
@@ -191,10 +191,10 @@ if __name__ == '__main__':
             test_loss, test_cs = compute_loss(net, x0, nt=nt_test)
             testLossMeter.update(test_loss.item(), nex)
             testAlphMeterL.update(test_cs[0].item(), nex)
-            testAlphMeterC.update(test_cs[2].item(), nex)
-            testAlphMeterR.update(test_cs[3].item(), nex)
+            testAlphMeterC.update(test_cs[1].item(), nex)
+            testAlphMeterR.update(test_cs[2].item(), nex)
             log_message = 'batch {:4d}: {:9.3e}  {:9.3e}  {:11.5e}  {:9.3e}'.format(
-                itr, test_loss, test_cs[0], test_cs[2], test_cs[3]
+                itr, test_loss, test_cs[0], test_cs[1], test_cs[2]
             )
             logger.info(log_message)  # print batch
             itr+=1

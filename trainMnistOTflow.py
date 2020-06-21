@@ -1,4 +1,4 @@
-# trainMnistCnf.py
+# trainMnistOTflow.py
 # train the MNIST model with the encoder-decoder structure
 import argparse
 import os
@@ -12,7 +12,7 @@ from lib.utils import count_parameters
 import datasets
 from datasets.mnist  import getLoader
 from src.plotter import *
-from src.MeanFieldGame import *
+from src.OTFlowProblem import *
 from src.Autoencoder import *
 import config
 
@@ -37,7 +37,7 @@ parser.add_argument(
 )
 parser.add_argument("--nt"    , type=int, default=8, help="number of time steps")
 parser.add_argument("--nt_val", type=int, default=16, help="number of time steps for validation")
-parser.add_argument('--alph'  , type=str, default='1.0,0.0,80.0,500.0,0.0')
+parser.add_argument('--alph'  , type=str, default='1.0,80.0,500.0')
 parser.add_argument('--m'     , type=int, default=def_m)
 parser.add_argument('--d'     , type=int, default=128) # encoded dimension
 
@@ -74,7 +74,7 @@ val_batch_size = args.val_batch_size if args.val_batch_size else args.batch_size
 device = torch.device("cuda:" + str(args.gpu) if torch.cuda.is_available() else "cpu")
 
 def compute_loss(net, x, nt): 
-    Jc , costs = MeanFieldGame(x, net, [0,1], nt=nt, stepper="rk4", alph=net.alph)
+    Jc , costs = OTFlowProblem(x, net, [0,1], nt=nt, stepper="rk4", alph=net.alph)
     return Jc, costs
 
 if __name__ == '__main__':
@@ -174,7 +174,7 @@ if __name__ == '__main__':
 
             log_message = (
                 '{:05d}  {:6.3f}  {:7.1e}   {:9.3e}  {:9.3e}  {:9.3e}  {:9.3e} '.format(
-                    itr, timeMeter.val, optim.param_groups[0]['lr'], loss, costs[0], costs[2], costs[3]
+                    itr, timeMeter.val, optim.param_groups[0]['lr'], loss, costs[0], costs[1], costs[2]
                 )
             )
 
@@ -183,7 +183,7 @@ if __name__ == '__main__':
                 logger.info("NaN encountered....exiting prematurely")
                 logger.info("Training Time: {:} seconds".format(timeMeter.sum))
                 logger.info('File: ' + start_time + '_{:}_alph{:}_{:}_m{:}_checkpt.pth'.format(
-                        args.data, int(net.alph[2]), int(net.alph[3]), m)
+                        args.data, int(net.alph[1]), int(net.alph[2]), m)
                 )
                 exit(1)
 
@@ -209,8 +209,8 @@ if __name__ == '__main__':
                         val_loss, val_costs = compute_loss(net, x0, nt=nt_val)
                         valLossMeter.update(val_loss.item(), nex)
                         valAlphMeterL.update(val_costs[0].item(), nex)
-                        valAlphMeterC.update(val_costs[2].item(), nex)
-                        valAlphMeterR.update(val_costs[3].item(), nex)
+                        valAlphMeterC.update(val_costs[1].item(), nex)
+                        valAlphMeterR.update(val_costs[2].item(), nex)
 
                         if not cf.gpu:  # for debugging
                             break
@@ -224,14 +224,14 @@ if __name__ == '__main__':
                     if valLossMeter.avg < best_loss:
                         logger.info('saving new best')
                         best_loss = valLossMeter.avg
-                        best_costs = [  valAlphMeterL.avg, val_costs[1], valAlphMeterC.avg, valAlphMeterR.avg, val_costs[4] ]
+                        best_costs = [  valAlphMeterL.avg, val_costs[1], valAlphMeterC.avg, valAlphMeterR.avg, val_costs[3] ]
                         utils.makedirs(args.save)
                         best_params = net.state_dict()
                         torch.save({
                             'args': args,
                             'state_dict': best_params,
                             'autoencoder': autoEnc.state_dict(),
-                        }, os.path.join(args.save, start_time + '_{:}_alph{:}_{:}_m{:}_checkpt.pth'.format(args.data,int(net.alph[2]),int(net.alph[3]),m)))
+                        }, os.path.join(args.save, start_time + '_{:}_alph{:}_{:}_m{:}_checkpt.pth'.format(args.data,int(net.alph[1]),int(net.alph[2]),m)))
                     net.train()
 
             logger.info(log_message) # print iteration
@@ -253,7 +253,7 @@ if __name__ == '__main__':
                     nSamples = p_samples.shape[0]
                     y = cvt(torch.randn(nSamples,d)) # sampling from rho_1
                     sPath = os.path.join(args.save, 'figs', start_time + '_{:04d}.png'.format(itr))
-                    plot4(net, p_samples, y, nt_val, sPath, sTitle='loss {:.2f}  ,  G {:.2f}'.format(best_loss, best_costs[2] ))
+                    plot4(net, p_samples, y, nt_val, sPath, sTitle='loss {:.2f}  ,  G {:.2f}'.format(best_loss, best_costs[1] ))
 
                     # plot the Mnist images
                     nSamples = 8 # overwrite
@@ -280,7 +280,7 @@ if __name__ == '__main__':
             # end batch_iter
 
     logger.info("Training Time: {:} seconds".format(timeMeter.sum))
-    logger.info('Training has finished.  ' + start_time + '_{:}_alph{:}_{:}_m{:}_checkpt.pth'.format(args.data,int(net.alph[2]),int(net.alph[3]),m))
+    logger.info('Training has finished.  ' + start_time + '_{:}_alph{:}_{:}_m{:}_checkpt.pth'.format(args.data,int(net.alph[1]),int(net.alph[2]),m))
 
 
 

@@ -1,13 +1,13 @@
-# testMeanFieldGame.py
+# testOTFlowProblem.py
 #
 
-# gradient check of MeanFieldGame
+# gradient check of OTFlowProblem
 import matplotlib
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 
 from src.Phi import *
-from src.MeanFieldGame import *
+from src.OTFlowProblem import *
 import torch.nn.utils
 
 
@@ -25,12 +25,12 @@ x = torch.randn(1,d+1).type(torch.double)
 
 v = torch.randn(x.shape).type(torch.double)
 # ------------------------------------------------
-# f is the full MeanFieldGame
-# MeanFieldGame(x, Phi, tspan , nt, stepper="rk1", alph =[1.0,1.0,1.0,1.0,1.0] )
+# f is the full OTFlowProblem
+# OTFlowProblem(x, Phi, tspan , nt, stepper="rk1", alph =[1.0,1.0,1.0,1.0,1.0] )
 
 input = torch.randn(1,d+1).type(torch.double)
 
-fx = torch.sum(MeanFieldGame(input[:,0:d], net, [0.0, 1.0] , nt=2, stepper="rk4", alph =[1.0,1.0,1.0,1.0,1.0] )[0])
+fx = torch.sum(OTFlowProblem(input[:,0:d], net, [0.0, 1.0] , nt=2, stepper="rk4", alph =[1.0,1.0,1.0,1.0,1.0] )[0])
 vecX = copy.copy(nn.utils.convert_parameters.parameters_to_vector(net.parameters()))
 v = torch.randn(vecX.shape).type(torch.double)
 
@@ -62,7 +62,7 @@ for i in range(1,niter):
     newVec = vecX + h*v
 
     nn.utils.convert_parameters.vector_to_parameters(newVec, net.parameters())  # set parameters
-    fxhv = torch.sum(MeanFieldGame(input[:,0:d], net, [0.0, 1.0] , nt=2, stepper="rk4", alph =[1.0,1.0,1.0,1.0,1.0] )[0])
+    fxhv = torch.sum(OTFlowProblem(input[:,0:d], net, [0.0, 1.0] , nt=2, stepper="rk4", alph =[1.0,1.0,1.0,1.0,1.0] )[0])
 
     # print(newVec[0:3])
     # print(vecX[0:3])
@@ -112,12 +112,12 @@ if doPlots:
 
 
 # ------------------------------------------------
-# f is the full MeanFieldGame
-# MeanFieldGame(x, Phi, tspan , nt, stepper="rk1", alph =[1.0,1.0,1.0,1.0,1.0] )
+# f is the full OTFlowProblem
+# OTFlowProblem(x, Phi, tspan , nt, stepper="rk1", alph =[1.0,1.0,1.0,1.0,1.0] )
 
 input = torch.randn(1,d+1).type(torch.double)
 
-fx = torch.sum(MeanFieldGame(input[:,0:d], net, [0.0, 1.0] , nt=2, stepper="rk4", alph =[1.0,1.0,1.0,1.0,1.0] )[0])
+fx = torch.sum(OTFlowProblem(input[:,0:d], net, [0.0, 1.0] , nt=2, stepper="rk4", alph =[1.0,1.0,1.0,1.0,1.0] )[0])
 x = net.N.layers[0].weight.data
 v = torch.randn(net.N.layers[0].weight.data.shape).type(torch.double)
 
@@ -149,7 +149,7 @@ for i in range(1,niter):
 
     net.N.layers[0].weight.data = x + h*v
 
-    fxhv = torch.sum(MeanFieldGame(input[:,0:d], net, [0.0, 1.0] , nt=2, stepper="rk4", alph =[1.0,1.0,1.0,1.0,1.0] )[0])
+    fxhv = torch.sum(OTFlowProblem(input[:,0:d], net, [0.0, 1.0] , nt=2, stepper="rk4", alph =[1.0,1.0,1.0,1.0,1.0] )[0])
 
     # print(newVec[0:3])
     # print(vecX[0:3])

@@ -1,4 +1,4 @@
-# trainLargeCnf.py
+# trainLargeOTflow.py
 # train OT-Flow for the large density estimation data sets
 import argparse
 import os
@@ -12,7 +12,7 @@ import lib.utils as utils
 from lib.utils import count_parameters
 
 from src.plotter import plot4
-from src.MeanFieldGame import *
+from src.OTFlowProblem import *
 from src.Phi import *
 import config
 import datasets
@@ -39,7 +39,7 @@ parser.add_argument(
 
 parser.add_argument("--nt"    , type=int, default=6, help="number of time steps")
 parser.add_argument("--nt_val", type=int, default=10, help="number of time steps for validation")
-parser.add_argument('--alph'  , type=str, default='1.0,0.0,100.0,15.0,1.0')
+parser.add_argument('--alph'  , type=str, default='1.0,100.0,15.0')
 parser.add_argument('--m'     , type=int, default=def_m)
 parser.add_argument('--nTh'   , type=int, default=2)
 
@@ -141,7 +141,7 @@ def load_data(name):
 
 
 def compute_loss(net, x, nt):
-    Jc , cs = MeanFieldGame(x, net, [0,1], nt=nt, stepper="rk4", alph=net.alph)
+    Jc , cs = OTFlowProblem(x, net, [0,1], nt=nt, stepper="rk4", alph=net.alph)
     return Jc, cs
 
 
@@ -253,7 +253,7 @@ if __name__ == '__main__':
                 logger.info("NaN encountered....exiting prematurely")
                 logger.info("Training Time: {:} seconds".format(timeMeter.sum))
                 logger.info('File: ' + start_time + '_{:}_alph{:}_{:}_m{:}_checkpt.pth'.format(
-                        args.data, int(net.alph[2]), int(net.alph[3]), m)
+                        args.data, int(net.alph[1]), int(net.alph[2]), m)
                 )
                 exit(1)
 
@@ -292,7 +292,7 @@ if __name__ == '__main__':
                         torch.save({
                             'args': args,
                             'state_dict': bestParams,
-                        }, os.path.join(args.save, start_time + '_{:}_alph{:}_{:}_m{:}_checkpt.pth'.format(args.data,int(net.alph[2]),int(net.alph[3]),m)))
+                        }, os.path.join(args.save, start_time + '_{:}_alph{:}_{:}_m{:}_checkpt.pth'.format(args.data,int(net.alph[1]),int(net.alph[2]),m)))
                     else:
                         n_vals_wo_improve+=1
 
@@ -324,7 +324,7 @@ if __name__ == '__main__':
                         logger.info("early stopping engaged")
                         logger.info("Training Time: {:} seconds".format(timeMeter.sum))
                         logger.info('File: ' + start_time + '_{:}_alph{:}_{:}_m{:}_checkpt.pth'.format(
-                            args.data, int(net.alph[2]), int(net.alph[3]), m)
+                            args.data, int(net.alph[1]), int(net.alph[2]), m)
                           )
                         exit(0)
                     else:
@@ -342,7 +342,7 @@ if __name__ == '__main__':
             # end batch_iter
 
     logger.info("Training Time: {:} seconds".format(timeMeter.sum))
-    logger.info('Training has finished.  ' + start_time + '_{:}_alph{:}_{:}_m{:}_checkpt.pth'.format(args.data,int(net.alph[2]),int(net.alph[3]),m))
+    logger.info('Training has finished.  ' + start_time + '_{:}_alph{:}_{:}_m{:}_checkpt.pth'.format(args.data,int(net.alph[1]),int(net.alph[2]),m))
 
 
 

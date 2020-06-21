@@ -55,7 +55,8 @@ class ResNN(nn.Module):
 class Phi(nn.Module):
     def __init__(self, nTh, m, d, r=10, alph=[1.0] * 5):
         """
-            neural network approximating Phi
+            neural network approximating Phi (see Eq. (9) in our paper)
+
             Phi( x,t ) = w'*ResNet( [x;t]) + 0.5*[x' t] * A'A * [x;t] + b'*[x;t] + c
 
         :param nTh:  int, number of resNet layers , (number of theta layers)
@@ -98,7 +99,7 @@ class Phi(nn.Module):
 
     def trHess(self,x, justGrad=False ):
         """
-        compute gradient of Phi wrt x and trace(Hessian of Phi)
+        compute gradient of Phi wrt x and trace(Hessian of Phi); see Eq. (11) and Eq. (13), respectively
         recomputes the forward propogation portions of Phi
 
         :param x: input data, torch Tensor nex-by-d

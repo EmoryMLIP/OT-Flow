@@ -9,7 +9,7 @@ import matplotlib.patches as patches
 
 import argparse
 import os
-from src.MeanFieldGame import *
+from src.OTFlowProblem import *
 import config
 import datasets
 from datasets.mnist  import getLoader
