@@ -1,5 +1,5 @@
 # OT-Flow
-Pytorch implementation of our optimal transport regularized continuous normalizing flows.
+Pytorch implementation of our continuous normalizing flows regularized with optimal transport.
 
 ## Associated Publication
 

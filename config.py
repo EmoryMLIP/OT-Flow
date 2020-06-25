@@ -2,9 +2,9 @@
 # simplistic config file to make code platform-agnostic
 
 def getconfig():
-    return ConfigMFG()
+    return ConfigOT()
 
-class ConfigMFG:
+class ConfigOT:
     """
     gpu - True means GPU available on plaform , False means it's not; this is used for default values
     os  - 'mac' , 'linux'

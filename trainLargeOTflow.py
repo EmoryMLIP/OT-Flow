@@ -207,7 +207,7 @@ if __name__ == '__main__':
     begin = time.time()
     end = begin
     best_loss = float('inf')
-    best_cs = [0.0]*5
+    best_cs = [0.0]*3
     bestParams = None
 
     log_msg = (
@@ -244,7 +244,7 @@ if __name__ == '__main__':
             
             log_message = (
                 '{:05d}  {:6.3f}  {:7.1e}   {:9.3e}  {:9.3e}  {:9.3e}  {:9.3e} '.format(
-                    itr, timeMeter.val, optim.param_groups[0]['lr'], loss, cs[0], cs[2], cs[3]
+                    itr, timeMeter.val, optim.param_groups[0]['lr'], loss, cs[0], cs[1], cs[2]
                 )
             )
 
@@ -273,8 +273,8 @@ if __name__ == '__main__':
                         val_loss, val_cs = compute_loss(net, x0, nt=nt_val)
                         valLossMeter.update(val_loss.item(), nex)
                         valAlphMeterL.update(val_cs[0].item(), nex)
-                        valAlphMeterC.update(val_cs[2].item(), nex)
-                        valAlphMeterR.update(val_cs[3].item(), nex)
+                        valAlphMeterC.update(val_cs[1].item(), nex)
+                        valAlphMeterR.update(val_cs[2].item(), nex)
 
 
                     # add to print message
@@ -286,7 +286,7 @@ if __name__ == '__main__':
                     if valLossMeter.avg < best_loss:
                         n_vals_wo_improve = 0
                         best_loss = valLossMeter.avg
-                        best_cs = [  valAlphMeterL.avg, val_cs[1], valAlphMeterC.avg, valAlphMeterR.avg, val_cs[4] ]
+                        best_cs = [  valAlphMeterL.avg, valAlphMeterC.avg, valAlphMeterR.avg ]
                         utils.makedirs(args.save)
                         bestParams = net.state_dict()
                         torch.save({
@@ -313,7 +313,7 @@ if __name__ == '__main__':
                     y = cvt(torch.randn(nSamples,d)) # sampling from rho_1 / standard normal
 
                     sPath = os.path.join(args.save, 'figs', start_time + '_{:04d}.png'.format(itr))
-                    plot4(net, p_samples, y, nt_val, sPath, sTitle='loss {:.2f}  ,  G {:.2f}'.format(best_loss, best_cs[2] ))
+                    plot4(net, p_samples, y, nt_val, sPath, sTitle='loss {:.2f}  ,  C {:.2f}'.format(best_loss, best_cs[1] ))
 
                     net.load_state_dict(currState)
                     net.train()

@@ -9,7 +9,7 @@ def vec(x):
     """vectorize torch tensor x"""
     return x.view(-1,1)
 
-def OTFlowProblem(x, Phi, tspan , nt, stepper="rk4", alph =[1.0,1.0,1.0,1.0,1.0] ):
+def OTFlowProblem(x, Phi, tspan , nt, stepper="rk4", alph =[1.0,1.0,1.0] ):
     """
 
     Evaluate objective function of OT Flow problem; see Eq. (8) in the paper.
@@ -37,7 +37,7 @@ def OTFlowProblem(x, Phi, tspan , nt, stepper="rk4", alph =[1.0,1.0,1.0,1.0,1.0]
             tk += h
     elif stepper=='rk1':
         for k in range(nt):
-            z = stepRK1(odefun,z,Phi, alph,tk,tk+h)
+            z = stepRK1(odefun, z, Phi, alph, tk, tk + h)
             tk += h
 
     # ASSUME all examples are equally weighted
@@ -46,6 +46,7 @@ def OTFlowProblem(x, Phi, tspan , nt, stepper="rk4", alph =[1.0,1.0,1.0,1.0,1.0]
     costR  = torch.mean(z[:,-1])
 
     cs = [costL, costC, costR]
+
     # return dot(cs, alph)  , cs
     return sum(i[0] * i[1] for i in zip(cs, alph)) , cs
 
@@ -57,7 +58,7 @@ def stepRK4(odefun, z, Phi, alph, t0, t1):
     :param odefun: function to apply at every time step
     :param z:      tensor nex-by-d+4, inputs
     :param Phi:    Module, the Phi potential function
-    :param alph:   list, the 3 alpha values for the mean field game problem
+    :param alph:   list, the 3 alpha values for the OT-Flow Problem
     :param t0:     float, starting time
     :param t1:     float, end time
     :return: tensor nex-by-d+4, features at time t1
@@ -179,7 +180,7 @@ def odefun(x, t, net, alph=[1.0,1.0,1.0]):
     dx = -(1.0/alph[0]) * gradPhi[:,0:d]
     dl = -(1.0/alph[0]) * trH.unsqueeze(1)
     dv = 0.5 * torch.sum(torch.pow(dx, 2) , 1 ,keepdims=True)
-    dr = torch.abs(  -gradPhi[:,-1].unsqueeze(1) + alph[0] * dv  ) # NEEDED if F !=0 :  alph[1]*getDeltaF term
+    dr = torch.abs(  -gradPhi[:,-1].unsqueeze(1) + alph[0] * dv  ) 
     
     return torch.cat( (dx,dl,dv,dr) , 1  )
 

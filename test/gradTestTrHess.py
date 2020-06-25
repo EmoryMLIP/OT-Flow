@@ -3,9 +3,6 @@
 import matplotlib
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
-
-
-from src.PhiHC import PhiHC
 from src.Phi import Phi
 import torch.nn.utils
 import copy

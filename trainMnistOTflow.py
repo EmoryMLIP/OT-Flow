@@ -135,7 +135,7 @@ if __name__ == '__main__':
     begin = time.time()
     end   = begin
     best_loss   = float('inf')
-    best_costs  = [0.0]*5
+    best_costs  = [0.0]*3
     best_params = None
 
     log_msg = (
@@ -224,7 +224,7 @@ if __name__ == '__main__':
                     if valLossMeter.avg < best_loss:
                         logger.info('saving new best')
                         best_loss = valLossMeter.avg
-                        best_costs = [  valAlphMeterL.avg, val_costs[1], valAlphMeterC.avg, valAlphMeterR.avg, val_costs[3] ]
+                        best_costs = [  valAlphMeterL.avg, valAlphMeterC.avg, valAlphMeterR.avg ]
                         utils.makedirs(args.save)
                         best_params = net.state_dict()
                         torch.save({
@@ -253,7 +253,7 @@ if __name__ == '__main__':
                     nSamples = p_samples.shape[0]
                     y = cvt(torch.randn(nSamples,d)) # sampling from rho_1
                     sPath = os.path.join(args.save, 'figs', start_time + '_{:04d}.png'.format(itr))
-                    plot4(net, p_samples, y, nt_val, sPath, sTitle='loss {:.2f}  ,  G {:.2f}'.format(best_loss, best_costs[1] ))
+                    plot4(net, p_samples, y, nt_val, sPath, sTitle='loss {:.2f}  ,  C {:.2f}'.format(best_loss, best_costs[1] ))
 
                     # plot the Mnist images
                     nSamples = 8 # overwrite

@@ -19,7 +19,6 @@ import lib.toy_data as toy_data
 import lib.utils as utils
 from src.OTFlowProblem import *
 from src.mmd import *
-from src.PhiHC import *
 
 
 def_resume = 'experiments/cnf/toy/pretrained/pretrained_swissroll_alph30_15_m32_checkpt.pth'
@@ -60,6 +59,8 @@ if __name__ == '__main__':
     net     = net.to(prec)
     net.load_state_dict(checkpt['state_dict'])
     net     = net.to(device)
+
+    args.data = checkpt['args'].data
 
     torch.set_default_dtype(prec)
     cvt = lambda x: x.type(prec).to(device, non_blocking=True)
