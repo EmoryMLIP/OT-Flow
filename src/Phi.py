@@ -6,7 +6,7 @@ import copy
 import math
 
 def antiderivTanh(x): # activation function aka the antiderivative of tanh
-    return torch.log(torch.exp(x) + torch.exp(-x))
+    return torch.abs(x) + torch.log(1+torch.exp(-2.0*torch.abs(x)))
 
 def derivTanh(x): # act'' aka the second derivative of the activation function antiderivTanh
     return 1 - torch.pow( torch.tanh(x) , 2 )
