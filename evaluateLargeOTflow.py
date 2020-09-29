@@ -178,10 +178,6 @@ if __name__ == '__main__':
         testAlphMeterC = utils.AverageMeter()
         testAlphMeterR = utils.AverageMeter()
 
-        # scale the GAS data set as it was in the training
-        if args.data == 'gas':
-            print(torch.min(testData),torch.max(testData))
-            testData = testData / 5.0
 
         itr = 1
         for x0 in batch_iter(testData, batch_size=args.batch_size):
@@ -230,9 +226,11 @@ if __name__ == '__main__':
             modelFinvfx[ idx:idx+batchSz , 0:d ] = finvfx[:,0:d].detach().cpu().numpy()
             idx = idx + batchSz
 
-        logger.info("model inv error:  {:.3e}".format(np.linalg.norm(testData.numpy() - modelFinvfx) / nex))
+        # logger.info("model inv error:  {:.3e}".format(np.linalg.norm(testData.numpy() - modelFinvfx) / nex)) # initial bug
+        logger.info("model inv error:  {:.3e}".format( np.mean(np.linalg.norm(testData.numpy() - modelFinvfx, ord=2, axis=1))))
         if args.long_version:
             logger.info("FFJORD inv error: {:.3e}".format( np.array(hf['invErr']).item()  ))
+
 
         # this portion can take a long time
         # generate samples
@@ -259,15 +257,9 @@ if __name__ == '__main__':
             testSamps = testData[0:nSamples, :]
             modelSamps = modelGen[0:nSamples, 0:d]
         else:
-            testSamps = testData[0:nSamples, :]
-            modelSamps = modelGen[:, 0:d]
-
-        if args.data=='gas':
-            # scale back
-            modelSamps = modelSamps * 5.0
-            testSamps  = testSamps  * 5.0
-            testData   = testData * 5.0
-            modelGen   = modelGen * 5.0
+            testSamps   = testData
+            modelSamps  = modelGen[:,0:d]
+            ffjordSamps = ffjordGen
 
         print("MMD( ourGen   , rho_0 ),  num(ourGen)={:d}    , num(rho_0)={:d} : {:.5e}".format( modelSamps.shape[0]  , testSamps.shape[0] , mmd(modelSamps  , testSamps )))
         if args.long_version:

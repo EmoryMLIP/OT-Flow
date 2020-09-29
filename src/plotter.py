@@ -56,10 +56,10 @@ def plot4(net, x, y, nt_val, sPath, sTitle="", doPaths=False):
         LOWY  = -10
         HIGHY = 10
     elif d==8: # assuming gas
-        LOWX  = -0.4   # note: there's a hard coded 4 and -4 in axs 2
-        HIGHX = 0.4
-        LOWY  = -0.4
-        HIGHY = 0.4 
+        LOWX  = -2   # note: there's a hard coded 4 and -4 in axs 2
+        HIGHX =  2
+        LOWY  = -2
+        HIGHY =  2
         d1=2
         d2=3
         nBins = 100

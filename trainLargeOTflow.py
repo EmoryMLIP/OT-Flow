@@ -155,10 +155,6 @@ if __name__ == '__main__':
     print(data.trn.x.shape)
     data.val.x = torch.from_numpy(data.val.x)
 
-    if args.data == 'gas': # scale the gas data smaller for stability
-        data.trn.x = data.trn.x / 5.0
-        data.val.x = data.val.x / 5.0
-
     # hyperparameters of model
     d   = data.trn.x.shape[1]
     nt  = args.nt
