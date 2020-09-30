@@ -46,12 +46,12 @@ For full capabilities, set the values in config.py to match your architecture.
 commands with hyperparameters
 
 ```
-python trainLargeOTflow.py --data power --niters 36000 --alph 1.0,500.0,10.0 --m 128 --batch_size 20000  --lr 0.02 --nt 8 --nt_val 16 --test_batch_size 100000 --val_freq 30 --weight_decay 0.0 --drop_freq 0
+python trainLargeOTflow.py --data power --niters 36000 --alph 1.0,500.0,5.0 --m 128 --batch_size 10000  --lr 0.03 --nt 10 --nt_val 22 --test_batch_size 120000 --val_freq 30 --weight_decay 0.0 --drop_freq 0
 
-python evaluateLargeOTflow.py --data power --nt 30 --batch_size 120000 --resume yourPowerCheckpt.pth
+python evaluateLargeOTflow.py --data power --nt 24 --batch_size 120000 --resume yourPowerCheckpt.pth
 
 
-python trainLargeOTflow.py --data gas --niters 60000 --alph 1.0,1200.0,80.0 --m 256 --batch_size 5000 --drop_freq 0 --lr 0.01 --nt 8 --nt_val 24 --test_batch_size 50000 --val_freq 25 --weight_decay 0.0 --viz_freq 1000 --prec single --early_stopping 20
+python trainLargeOTflow.py --data gas --niters 60000 --alph 1.0,1200.0,40.0 --m 350 --batch_size 2000 --drop_freq 0 --lr 0.01 --nt 10 --nt_val 28 --test_batch_size 55000 --val_freq 50 --weight_decay 0.0 --viz_freq 1000 --prec single --early_stopping 20
 
 python evaluateLargeOTflow.py --data gas --nt 30 --batch_size 55000 --resume youGasCheckpt.pth
 

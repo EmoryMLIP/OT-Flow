@@ -83,7 +83,8 @@ if __name__ == '__main__':
         print("[TEST]:   {:9.3e}  {:9.3e}  {:11.5e}  {:9.3e}".format(test_loss, test_cs[0], test_cs[1], test_cs[2]))
 
         print("Using ", utils.count_parameters(net), " parameters")
-        invErr = (torch.norm(p_samples-modelFinvfx[:,:d]) / p_samples.size(0)).item()
+        invErr = np.mean(np.linalg.norm(p_samples.detach().cpu().numpy() - modelFinvfx[:,:d].detach().cpu().numpy(), ord=2, axis=1))
+        # invErr = (torch.norm(p_samples-modelFinvfx[:,:d]) / p_samples.size(0)).item()
         print("inv error: ", invErr )
 
         modelGen = modelGen[:, 0:d].detach().cpu().numpy()

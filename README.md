@@ -76,8 +76,8 @@ Train and Evaluate using our hyperparameters ([see detailedSetup.md](detailedSet
 
 | Data set           | Train Time Steps | Val Time Steps | Batch Size | Hidden Dim | alpha on C term | alpha on R term | Test Time Steps | Test Batch Size |
 |------------------- |----------------- |--------------- |----------- |----------- |---------------- |---------------- |---------------- |---------------- |
-| Power              |   8              |        16      |     20,000 |    128     |        500      | 10              | 30              | 120,000         |  
-| Gas                |   8              |        24      |     5,000  |    256     |       1,200     | 80              | 30              |  55,000         |
+| Power              |   10             |        22      |     10,000 |    128     |        500      | 5               | 24              | 120,000         |  
+| Gas                |   10             |        24      |     2,000  |    350     |       1,200     | 40              | 30              |  55,000         |
 | Hepmass            |   12             |        24      |     2,000  |    256     |        500      | 40              | 24              |  50,000         |
 | Miniboone          |   6              |        10      |     2,000  |    256     |        100      | 15              | 18              |    5,000        |
 | BSDS300            |   14             |        30      |     300    |    512     |       2,000     | 800             | 40              |   10,000        |

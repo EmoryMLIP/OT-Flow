@@ -79,7 +79,9 @@ def compareTrace(domain,d, seed=0):
 
         # create the num_hutchinsons rademacher vectors...these "vectors" are each stored as a matrix
         # we have num_hutchinsons of them, so that makes a tensor called rad
-        # compute vector-Jacobain Product using AD with the rademacher vector
+        # compute vector-Jacobian Product using AD with the rademacher vector
+
+
         start.record()
         rad = (1 / math.sqrt(num_hutchinsons)) * ((torch.rand(n_samples, d+1, num_hutchinsons,device=device) < 0.5).float() * 2 - 1)
         rad[:,d,:] = 0 # set time position to 0, leave space values as rademacher
@@ -110,68 +112,43 @@ if __name__ == '__main__':
     domainMini  = [1, 10, 20, 30, 43]
     domainBSDS  = [1, 10, 20, 30, 40, 50, 63]
     domainMNIST = [1, 100, 200, 300, 400, 500, 600, 700, 784]
-
     
     nRepeats = 2 # average over 2 runs. For publication figure, we set this to 20
-    _ = compareTrace(domainMini, 50) # dry-run
-    resTimeBSDS , traceErrorBSDS , exactTimingBSDS = compareTrace(domainBSDS, 63)
-    _ = compareTrace(domainMini, 50) # dry-run
-    resTimeMini , traceErrorMini, exactTimingMini = compareTrace(domainMini, 43) 
-    _ = compareTrace(domainMini, 50) # dry-run
-    resTimeMNIST, traceErrorMNIST, exactTimingMNIST = compareTrace(domainMNIST, 784)
 
-    for i in range(nRepeats-1):
+    # arrays to hold all the results...in case we want to use error bounds
+    resTimeBSDSArray            = torch.zeros(nRepeats, len(domainBSDS))
+    traceErrorBSDSArray         = torch.zeros(nRepeats, len(domainBSDS))
+    exactTimingBSDSArray        = torch.zeros(nRepeats, 1)
+    resTimeMiniArray            = torch.zeros(nRepeats, len(domainMini))
+    traceErrorMiniArray         = torch.zeros(nRepeats, len(domainMini))
+    exactTimingMiniArray        = torch.zeros(nRepeats, 1)
+    resTimeMNISTArray           = torch.zeros(nRepeats, len(domainMNIST))
+    traceErrorMNISTArray        = torch.zeros(nRepeats, len(domainMNIST))
+    exactTimingMNISTArray       = torch.zeros(nRepeats, 1)
+
+    for i in range(nRepeats):
+        print('\n\n ITER ', i)
         _ = compareTrace(domainMini, 50) # dry-run
-        a , b, c = compareTrace(domainBSDS, 63)
-        resTimeBSDS     += a
-        traceErrorBSDS  += b
-        exactTimingBSDS += c
+        a , b, c = compareTrace(domainBSDS, 63, seed=i);
+        resTimeBSDSArray[i,:] = a
+        traceErrorBSDSArray[i,:] = b
+        exactTimingBSDSArray[i] = c
         _ = compareTrace(domainMini, 50) # dry-run
-        a , b, c = compareTrace(domainMini, 43)
-        resTimeMini     += a
-        traceErrorMini  += b
-        exactTimingMini += c
+        a , b, c = compareTrace(domainMini, 43, seed=i)
+        resTimeMiniArray[i, :] = a
+        traceErrorMiniArray[i, :] = b
+        exactTimingMiniArray[i] = c
         _ = compareTrace(domainMini, 50) # dry-run
-        a , b, c = compareTrace(domainMNIST, 784)
-        resTimeMNIST    += a
-        traceErrorMNIST += b
-        exactTimingMNIST+= c
-
-    # average and convert to list
-    resTimeMini       = (resTimeMini/nRepeats).view(-1).tolist()
-    traceErrorMini    = (traceErrorMini/nRepeats).view(-1).tolist()
-    exactTimingMini  /= nRepeats
-    resTimeBSDS       = (resTimeBSDS/nRepeats).view(-1).tolist()
-    traceErrorBSDS    = (traceErrorBSDS/nRepeats).view(-1).tolist()
-    exactTimingBSDS  /= nRepeats
-    resTimeMNIST      = (resTimeMNIST/nRepeats).view(-1).tolist()
-    traceErrorMNIST   = (traceErrorMNIST/nRepeats).view(-1).tolist()
-    exactTimingMNIST /= nRepeats
+        a , b, c = compareTrace(domainMNIST, 784, seed=i)
+        resTimeMNISTArray[i, :] = a
+        traceErrorMNISTArray[i, :] = b
+        exactTimingMNISTArray[i] = c
 
 
-
-    # print out the values
-    torch.set_printoptions(precision=10)
-    print("values to plot")
-    print("-----------------")
-    print("Miniboone")
-    print("AD timings:   ", resTimeMini)
-    print("AD Error:     ", traceErrorMini)
-    print("Exact timing: ", exactTimingMini)
-    print("BSDS")
-    print("AD timings:   ", resTimeBSDS)
-    print("AD Error:     ", traceErrorBSDS)
-    print("Exact timing: ", exactTimingBSDS)
-    print("MNIST")
-    print("AD timings:   ", resTimeMNIST)
-    print("AD Error:     ", traceErrorMNIST)
-    print("Exact timing: ", exactTimingMNIST)
-
-
-    lTimeExact = [exactTimingMini, exactTimingBSDS, exactTimingMNIST]
+    lTimeExact = [ exactTimingMiniArray  , exactTimingBSDSArray , exactTimingMNISTArray]
     plotTraceCompare(domainMini    , domainBSDS    , domainMNIST,
-                     resTimeMini   , resTimeBSDS   , resTimeMNIST,
-                     traceErrorMini, traceErrorBSDS, traceErrorMNIST,
+                     resTimeMiniArray   , resTimeBSDSArray   , resTimeMNISTArray,
+                     traceErrorMiniArray, traceErrorBSDSArray, traceErrorMNISTArray,
                      lTimeExact, 'image/traceComparison/')
 
 
