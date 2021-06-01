@@ -4,15 +4,23 @@ Pytorch implementation of our continuous normalizing flows regularized with opti
 ## Associated Publication
 
 OT-Flow: Fast and Accurate Continuous Normalizing Flows via Optimal Transport
-https://arxiv.org/abs/2006.00104
+
+Paper: https://ojs.aaai.org/index.php/AAAI/article/view/17113
+
+Supplemental: https://arxiv.org/abs/2006.00104
 
 Please cite as
     
-    @article{onken2020otflow,
-        title={OT-Flow: Fast and Accurate Continuous Normalizing Flows via Optimal Transport},
+    @inproceedings{onken2021otflow, 
+        title={{OT-Flow}: Fast and Accurate Continuous Normalizing Flows via Optimal Transport},
         author={Derek Onken and Samy Wu Fung and Xingjian Li and Lars Ruthotto},
-        year={2020},
-        journal = {arXiv preprint arXiv:2006.00104},
+	    volume={35}, 
+	    number={10}, 
+	    booktitle={AAAI Conference on Artificial Intelligence}, 
+	    year={2021}, 
+	    month={May},
+	    pages={9223--9232},
+	    url={https://ojs.aaai.org/index.php/AAAI/article/view/17113}, 
     }
 
 ## Set-up
