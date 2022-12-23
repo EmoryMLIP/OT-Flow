@@ -27,7 +27,7 @@ Start up the virtual environment:
 source otEnv/bin/activate
 ```
 
-If you're running python 3.7, install all the requirements:
+If you're running python 3.7 (and pip 21.3.1), install all the requirements:
 ```
 pip install -r requirements.txt 
 ```
@@ -40,9 +40,28 @@ pip install torch==1.4.0+cu92 torchvision==0.5.0+cu92 -f https://download.pytorc
 For full capabilities, set the values in config.py to match your architecture.
 
 
+### Training and Evaluating Toy Data Sets
+commands with hyperparameters
 
 
-### Training and Evaluating Large data sets
+```
+python trainToyOTflow.py --data 8gaussians --nt 8 --nt_val 12 --batch_size 5000 --prec double --alph 1.0,30.0,1 --niters 5000 --lr 1e-1 --val_freq 50  --drop_freq 500 --sample_freq 25 --m 32
+
+python trainToyOTflow.py --data checkerboard --nt 12 --nt_val 16 --batch_size 10000 --prec double --alph 1.0,15.0,2.0 --niters 20000 --lr 5e-2 --val_freq 50 --drop_freq 1000 --sample_freq 25 --m 32
+
+python trainToyOTflow.py --data swissroll --nt 8 --nt_val 16 --batch_size 5000 --prec double --alph 1.0,30.0,15.0 --niters 5000 --lr 5e-2 --val_freq 50 --drop_freq 1000 --sample_freq 25 --m 32
+
+python trainToyOTflow.py --data circles --nt 8 --nt_val 12 --batch_size 5000 --prec double --alph 1.0,5.0,1.0 --niters 5000 --lr 5e-2 --val_freq 50  --drop_freq 1000 --sample_freq 25 --m 32
+
+python trainToyOTflow.py --data moons --nt 8 --nt_val 12 --batch_size 5000 --prec double --alph 1.0,8.0,1.0 --niters 5000 --lr 5e-2 --val_freq 50 --drop_freq 1000 --sample_freq 25 --m 32
+
+python trainToyOTflow.py --data pinwheel --nt 8 --nt_val 12 --batch_size 5000 --prec double --alph 1.0,30.0,15.0 --niters 5000 --lr 5e-2 --val_freq 50 --drop_freq 1000 --sample_freq 25 --m 32
+
+python trainToyOTflow.py --data 2spirals --nt 8 --nt_val 12 --batch_size 5000 --prec double --alph 1.0,10.0,1.0 --niters 5000 --lr 5e-2 --val_freq 50  --drop_freq 1000 --sample_freq 25 --m 32 
+```
+
+
+### Training and Evaluating Large Data Sets
 commands with hyperparameters
 
 ```

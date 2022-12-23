@@ -1,11 +1,13 @@
 # evaluateToyOTflow.py
 # plotting toy CNF results
-import matplotlib
 try:
+    import matplotlib
     matplotlib.use('TkAgg')
+    import matplotlib.pyplot as plt
 except:
+    import matplotlib
     matplotlib.use('agg') # for linux server with no tkinter
-import matplotlib.pyplot as plt
+    import matplotlib.pyplot as plt
 plt.rcParams['image.cmap'] = 'inferno'
 plt.rcParams.update({'font.size': 22})
 

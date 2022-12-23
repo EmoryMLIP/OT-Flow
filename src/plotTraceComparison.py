@@ -1,11 +1,13 @@
 # plotTraceComparison.py
 
-import matplotlib
 try:
-    matplotlib.use('TkAgg')                                                                                                                                 
+    import matplotlib
+    matplotlib.use('TkAgg')
+    import matplotlib.pyplot as plt
 except:
-    matplotlib.use('Agg') # for linux server with no tkinter
-import matplotlib.pyplot as plt
+    import matplotlib
+    matplotlib.use('agg') # for linux server with no tkinter
+    import matplotlib.pyplot as plt
 import numpy as np
 import torch
 import os
