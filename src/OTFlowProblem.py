@@ -114,7 +114,7 @@ def integrate(x, net, tspan , nt, stepper="rk4", alph =[1.0,1.0,1.0], intermedia
     h = (tspan[1]-tspan[0]) / nt
 
     # initialize "hidden" vector to propagate with all the additional dimensions for all the ODEs
-    z = pad(x, (0, 3, 0, 0), value=tspan[0])
+    z = pad(x, (0, 3, 0, 0), value=0.0)
 
     tk = tspan[0]
 
